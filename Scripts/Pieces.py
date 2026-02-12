@@ -27,17 +27,11 @@ class Pieces:
         self.moveset.append(pos_converter(move))
 
     def pos_occupied(self, pos):
-        if pos_converter(pos) in self.board:
-            return bool(self.board[pos_converter(pos)])
-        else:
-            return True
+        return bool(self.board[pos_converter(pos)])
 
     def pos_is_enemy(self, pos):
-        if pos_converter(pos) in self.board:
-            if self.board[pos_converter(pos)]:
-                return self.board[pos_converter(pos)] != self.color
-            else:
-                return False
+        if self.board[pos_converter(pos)]:
+            return self.board[pos_converter(pos)] != self.color
         else:
             return False
     
@@ -47,6 +41,9 @@ class Pieces:
             if pos in king_pos:
                 check.append(pos)
         return check
+    
+    def check_inbound(self, pos: tuple):
+        return pos[0] > 0 and pos[0] < 9 and pos[1] > 0 and pos[1] < 9
 
 class Pawn(Pieces):
     def __init__(self, pos: str, color: str, board: dict, en_passant_board: dict):
@@ -101,7 +98,6 @@ class Rook(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
 
         self.stop = False
@@ -110,7 +106,6 @@ class Rook(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
 
         self.stop = False
@@ -119,7 +114,6 @@ class Rook(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
     
         self.stop = False
@@ -128,7 +122,6 @@ class Rook(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
 
         return self.moveset
@@ -148,7 +141,6 @@ class Bishop(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         p_y = self.pos[1]
@@ -161,7 +153,6 @@ class Bishop(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         p_y = self.pos[1]
@@ -174,7 +165,6 @@ class Bishop(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         p_y = self.pos[1]
@@ -187,7 +177,6 @@ class Bishop(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         return self.moveset
@@ -200,8 +189,10 @@ class Knight(Pieces):
     
     def current_moveset(self):
         for move in self.move:
-            if self.calculation((move[0] + self.pos[0], move[1] + self.pos[1])):
-                self.append_move((move[0] + self.pos[0], move[1] + self.pos[1]))
+            moving = (move[0] + self.pos[0], move[1] + self.pos[1])
+            if self.check_inbound(moving):
+                if self.calculation(moving):
+                    self.append_move(moving)
 
 class Quenn(Pieces):
     def __init__(self, pos: str, color: str, board: dict):
@@ -214,7 +205,6 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
 
         self.stop = False
@@ -223,7 +213,6 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
 
         self.stop = False
@@ -232,7 +221,6 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
     
         self.stop = False
@@ -241,7 +229,6 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         p_y = self.pos[1]
@@ -254,7 +241,6 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         p_y = self.pos[1]
@@ -267,7 +253,6 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         p_y = self.pos[1]
@@ -280,7 +265,6 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         p_y = self.pos[1]
@@ -293,12 +277,11 @@ class Quenn(Pieces):
             if self.calculation(move):
                 self.append_move(move)
             elif self.stop or not self.calculation(move):
-                print("end")
                 break
         
         return self.moveset
 
-class King(Pieces):
+class King(Pieces): 
     def __init__(self, pos: str, color: str, board: dict):
         super().__init__(pos, color, board, "king")
         self.move = [(1, 1), (1, -1), (-1, 1), (-1, 1),
@@ -307,8 +290,10 @@ class King(Pieces):
     
     def current_moveset(self):
         for move in self.move:
-            if self.calculation(move):
-                self.append_move(move)
+            moving = (move[0] + self.pos[0], move[1] + self.pos[1])
+            if self.check_inbound(moving):
+                if self.calculation(moving):
+                    self.append_move(moving)
     
     def update_check(self, check):
         for move in self.moveset:

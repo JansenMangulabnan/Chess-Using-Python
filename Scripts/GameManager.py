@@ -4,9 +4,20 @@ class GameProcess:
     def __init__(self):
         self.current_piece = ""
         self.defense_list = []
+        self.whites_turn = True
+    
+    def clicked(self, grid_rect: dict, m_pos) -> str:
+        for key, rect in grid_rect.items():
+            if rect.collidepoint(m_pos):
+                return key
+        return ""
+                
 
-    def update_moveset(self):
-        pass
+    def turn_checker(self, turn_has_moved: bool) -> bool:
+        if turn_has_moved:
+            self.whites_turn = not self.whites_turn
+        
+        return self.whites_turn
 
 class BoardGrid:
     def __init__(self, surf_rect,  grid=[8, 8]):
@@ -18,7 +29,7 @@ class BoardGrid:
         self.grid_size = (self.board_size[0] / grid[0], self.board_size[1] / grid[1])
         self.pos_name = [
             "abcdefgh",
-            "12345678"
+            "87654321"
         ]
 
     def create_rect(self):
