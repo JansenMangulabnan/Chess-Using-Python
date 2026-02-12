@@ -4,13 +4,15 @@ def create_board():
     board = {}
     letter = "abcdefgh"
     for i in range(0, 8):
-        board[letter[i] + str(i + 1)] = None
+        for j in range(0, 8):
+            board[letter[i] + str(j + 1)] = None
     return board
 
 class Board:
     def __init__(self):
         self.letter = "abcdefgh"
         self.colors = create_board()
+
         self.objects = create_board()
 
         self.can_en_pessant = {

@@ -38,6 +38,7 @@ class Game:
                 "rook": load_image("w_rook.png", self.board_dict["a1"]),
             }
         }
+        self.moveset_img = load_image("moveset.png", self.board_dict["a1"])
 
         self.pieces_rect = get_img_rect(self.pieces_img["black"], self.pieces_img["white"])
 
@@ -52,8 +53,9 @@ class Game:
                     pygame.quit()
                     sys.exit()
             
-            self.renderer.board(        )
+            self.renderer.board()
             self.renderer.pieces(self.board.return_objects())
+            self.renderer.moveset(self.moveset_img, self.board.return_objects()["g8"])
 
             pygame.display.update()
             self.clock.tick(60)

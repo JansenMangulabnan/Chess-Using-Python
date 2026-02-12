@@ -3,6 +3,7 @@ import pygame
 class GameProcess:
     def __init__(self):
         self.current_piece = ""
+        self.defense_list = []
 
     def update_moveset(self):
         pass
@@ -57,3 +58,8 @@ class Render:
         for key, values in pieces_dict.items():
             if values:
                 self.surf.blit(self.asset[values.color][values.p_type], self.rect_dict[key].topleft)
+    
+    def moveset(self, img, piece):
+        piece.current_moveset()
+        for move in piece.moveset:
+            self.surf.blit(img, self.rect_dict[move].topleft)

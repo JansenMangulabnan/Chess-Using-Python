@@ -9,7 +9,7 @@ class Pieces:
 
         self.moveset = []
         self.can_en_passant = False
-        self.has_moved = True
+        self.has_moved = False
         self.stop = False
 
     def return_type(self):
@@ -27,11 +27,17 @@ class Pieces:
         self.moveset.append(pos_converter(move))
 
     def pos_occupied(self, pos):
-        return bool(self.board[pos_converter(pos)])
+        if pos_converter(pos) in self.board:
+            return bool(self.board[pos_converter(pos)])
+        else:
+            return True
 
     def pos_is_enemy(self, pos):
-        if self.board[pos_converter(pos)]:
-            return self.board[pos_converter(pos)] != self.color
+        if pos_converter(pos) in self.board:
+            if self.board[pos_converter(pos)]:
+                return self.board[pos_converter(pos)] != self.color
+            else:
+                return False
         else:
             return False
     
@@ -194,8 +200,8 @@ class Knight(Pieces):
     
     def current_moveset(self):
         for move in self.move:
-            if self.calculation(move):
-                self.append_move(move)
+            if self.calculation((move[0] + self.pos[0], move[1] + self.pos[1])):
+                self.append_move((move[0] + self.pos[0], move[1] + self.pos[1]))
 
 class Quenn(Pieces):
     def __init__(self, pos: str, color: str, board: dict):
