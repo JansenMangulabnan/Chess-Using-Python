@@ -1,11 +1,12 @@
 import pygame
 import os
 
-BASE_IMG_PATH = "ChessPieces/"
+BASE_IMG_PATH = "Chess-Using-Python/ChessPieces/"
 
-def load_image(path):
-    img = pygame.image.load(BASE_IMG_PATH + path).convert()
-    return img
+def load_image(path, rect):
+    img = pygame.image.load(BASE_IMG_PATH + path)
+    scaled = pygame.transform.scale(img, (rect.width, rect.height))
+    return scaled
 
 def get_img_rect(img_b, img_w):
     img_dict = {

@@ -1,4 +1,4 @@
-from Utils import pos_converter, get_range, str_to_tuple_pos
+from .Utils import pos_converter, get_range, str_to_tuple_pos
 
 class Pieces:
     def __init__(self, pos: str, color: str, board: dict, p_type: str):
@@ -34,6 +34,13 @@ class Pieces:
             return self.board[pos_converter(pos)] != self.color
         else:
             return False
+    
+    def check_area(self, king_pos: list):
+        check = []
+        for pos in self.moveset:
+            if pos in king_pos:
+                check.append(pos)
+        return check
 
 class Pawn(Pieces):
     def __init__(self, pos: str, color: str, board: dict, en_passant_board: dict):
@@ -192,7 +199,7 @@ class Knight(Pieces):
 
 class Quenn(Pieces):
     def __init__(self, pos: str, color: str, board: dict):
-        super().__init__(pos, color, board, "knight")
+        super().__init__(pos, color, board, "quenn")
     
     def current_moveset(self):
         self.stop = False
@@ -288,16 +295,24 @@ class Quenn(Pieces):
 class King(Pieces):
     def __init__(self, pos: str, color: str, board: dict):
         super().__init__(pos, color, board, "king")
-
         self.move = [(1, 1), (1, -1), (-1, 1), (-1, 1),
                      (1, 0), (-1, 0), (0, 1), (0, -1),]
-        
-        self.is_checkmate = False
-
+        self.check = False
+    
     def current_moveset(self):
         for move in self.move:
             if self.calculation(move):
                 self.append_move(move)
+    
+    def update_check(self, check):
+        for move in self.moveset:
+            if move in check:
+                self.moveset.remove(move)
+            if self.pos in check:
+                self.check = True
 
-    def checkmate(self):
-        return self.is_checkmate
+    def is_checkmate(self, defense_list):
+        checkmate = False
+        if self.check and not self.moveset and not defense_list:
+            checkmate = True
+        return checkmate

@@ -1,4 +1,4 @@
-from Pieces import Pawn, Rook, Bishop, Knight, Quenn, King
+from .Pieces import Pawn, Rook, Bishop, Knight, Quenn, King
 
 def create_board():
     board = {}
@@ -16,6 +16,11 @@ class Board:
         self.can_en_pessant = {
             "black": None,
             "white": None,
+        }
+
+        self.king_pos = {
+            "white": "e1",
+            "black": "e8",
         }
     
     def init(self):
@@ -51,8 +56,9 @@ class Board:
 
         self.objects["e1"] = King("d1", "white", self.colors)
         self.objects["e8"] = King("d8", "black", self.colors)
-        
-test = Board()
-test.init()
+   
+    def return_colors(self) -> dict:
+        return self.colors  
 
-print(test.objects, test.colors)
+    def return_objects(self) -> dict:
+        return self.objects

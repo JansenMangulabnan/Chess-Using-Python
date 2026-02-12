@@ -2,54 +2,58 @@ import pygame
 import sys
 
 from Scripts.GameManager import BoardGrid, Render
+from Scripts.Board import Board
+from Scripts.Pieces import Pawn, Rook, Bishop, Knight, Quenn, King
 from Scripts.Utils import load_image, get_img_rect
 
 class Game:
     def __init__(self):
         pygame.init()
-
-        self.screen = (1000, 700)
-        self.surface = pygame.display.set_mode(self.screen)
+        
+        self.surface = pygame.display.set_mode((1000, 700))
         pygame.display.set_caption("CHESS")
         self.clock = pygame.time.Clock()
 
         self.surf_rect = self.surface.get_rect()
+        self.board_dict = BoardGrid(self.surf_rect).create_rect()
+
+        self.board = Board()
+        self.board.init()
 
         self.pieces_img = {
             "black": {
-                "pawn": load_image("b_pawn.png"),
-                "king": load_image("b_king.png"),
-                "quenn": load_image("b_quenn.png"),
-                "knight": load_image("b_knight.png"),
-                "bishop": load_image("b_bishop.png"),
-                "rook": load_image("b_rook.png"),
+                "pawn": load_image("b_pawn.png", self.board_dict["a1"]),
+                "king": load_image("b_king.png", self.board_dict["a1"]),
+                "quenn": load_image("b_quenn.png", self.board_dict["a1"]),
+                "knight": load_image("b_knight.png", self.board_dict["a1"]),
+                "bishop": load_image("b_bishop.png", self.board_dict["a1"]),
+                "rook": load_image("b_rook.png", self.board_dict["a1"]),
             },
             "white": {
-                "pawn": load_image("w_pawn.png"),
-                "king": load_image("w_king.png"),
-                "quenn": load_image("w_quenn.png"),
-                "knight": load_image("w_knight.png"),
-                "bishop": load_image("w_bishop.png"),
-                "rook": load_image("w_rook.png"),
+                "pawn": load_image("w_pawn.png", self.board_dict["a1"]),
+                "king": load_image("w_king.png", self.board_dict["a1"]),
+                "quenn": load_image("w_quenn.png", self.board_dict["a1"]),
+                "knight": load_image("w_knight.png", self.board_dict["a1"]),
+                "bishop": load_image("w_bishop.png", self.board_dict["a1"]),
+                "rook": load_image("w_rook.png", self.board_dict["a1"]),
             }
         }
 
         self.pieces_rect = get_img_rect(self.pieces_img["black"], self.pieces_img["white"])
 
-        self.board_rect = pygame.Rect(0, 0, 600, 600)
-        self.board_rect.center = self.surf_rect.center
-
-        self.board_dict = BoardGrid(self.board_rect).create_rect()
-        self.renderer = Render(self.surface)
+        self.renderer = Render(self.surface, self.board_dict, self.pieces_img)
 
     def run(self):
         while True:
+            self.surface.fill((0, 0, 0))
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
             
-            self.renderer.board(self.board_dict)
+            self.renderer.board(        )
+            self.renderer.pieces(self.board.return_objects())
 
             pygame.display.update()
             self.clock.tick(60)
