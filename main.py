@@ -8,9 +8,9 @@ from Scripts.Utils import load_image, get_img_rect
 class Chess:
     def __init__(self):
         pygame.init()
-        self.miss_ko_na_si_mayor = True
-        self.surface = pygame.display.set_mode((1000, 700))
         pygame.display.set_caption("CHESS")
+        
+        self.surface = pygame.display.set_mode((1000, 700))
         self.clock = pygame.time.Clock()
 
         self.surf_rect = self.surface.get_rect()
