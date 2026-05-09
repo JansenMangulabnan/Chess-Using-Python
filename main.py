@@ -4,6 +4,7 @@ import sys
 from Scripts.GameManager import GameProcess, BoardGrid, Render
 from Scripts.Board import Board
 from Scripts.Utils import load_image, get_img_rect
+from Scripts.Pieces import Pieces
 
 class Chess:
     def __init__(self):
@@ -43,15 +44,31 @@ class Chess:
         self.renderer = Render(self.surface, self.board_dict, self.pieces_img)
         self.game = GameProcess()
 
-        self.has_moved = False
         self.pos_clicked = ""
-        self.clicked_piece = None
+        self.clicked_piece: Pieces = None
         self.color = ""
+        self.has_moved: bool = False
+    
+    def input_handler(self):
+        m_pos = pygame.mouse.get_pos()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.pos_clicked = self.game.clicked(self.board_dict, m_pos)
+            
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    self.has_moved = False
+                
 
     def run(self):
         while True:
             self.surface.fill((0, 0, 0))
-            m_pos = pygame.mouse.get_pos()
             objects = self.board.return_objects()
 
             self.game.update_moveset(self.board.objects)
@@ -60,24 +77,21 @@ class Chess:
                 self.color = "white"
             else: 
                 self.color = "black"
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        self.pos_clicked = self.game.clicked(self.board_dict, m_pos)
             
+            self.input_handler()
+
             self.renderer.board()
             self.renderer.pieces(objects)
 
             if self.clicked_piece and self.game.can_move(self.clicked_piece, self.pos_clicked):
-                self.game.move_piece(self.board, self.clicked_piece, self.clicked_piece.return_pos(), self.pos_clicked)
+                self.game.move_piece(self.board, self.clicked_piece, self.pos_clicked)
+                self.clicked_piece = None
                 self.has_moved = True
             
             if self.pos_clicked and objects[self.pos_clicked]:
                 self.clicked_piece = objects[self.pos_clicked]
+            
+            if self.clicked_piece:
                 self.renderer.moveset(self.moveset_img, self.clicked_piece, self.color)
 
             pygame.display.update()

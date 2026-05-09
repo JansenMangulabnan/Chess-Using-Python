@@ -50,6 +50,9 @@ class Pieces:
 
     def return_pos(self):
         return pos_converter(self.pos)
+    
+    def reset_moveset(self):
+        self.moveset = []
 
 class Pawn(Pieces):
     def __init__(self, pos: str, color: str, board: dict, en_passant_board: dict):
@@ -65,6 +68,7 @@ class Pawn(Pieces):
             self.move = [(0, -2), (0, -1), (-1, -1), (1, -1)]
 
     def current_moveset(self) -> dict:
+        self.reset_moveset()
         dict_move = []
 
         for i in range(0, 4):
@@ -98,6 +102,7 @@ class Rook(Pieces):
         super().__init__(pos, color, board, "rook")
     
     def current_moveset(self):
+        self.reset_moveset()
         self.stop = False
         for x in get_range(self.pos[0], 1):
             move = (x, self.pos[1])
@@ -137,6 +142,7 @@ class Bishop(Pieces):
         super().__init__(pos, color, board, "bishop")
 
     def current_moveset(self):
+        self.reset_moveset()
         p_y = self.pos[1]
         self.stop = False
         for x in get_range(self.pos[0], 1):
@@ -194,6 +200,7 @@ class Knight(Pieces):
                      (2, 1), (2, -1), (-2, 1), (-2, -1),]
     
     def current_moveset(self):
+        self.reset_moveset()
         for move in self.move:
             moving = (move[0] + self.pos[0], move[1] + self.pos[1])
             if self.check_inbound(moving):
@@ -205,6 +212,7 @@ class Quenn(Pieces):
         super().__init__(pos, color, board, "quenn")
     
     def current_moveset(self):
+        self.reset_moveset()
         self.stop = False
         for x in get_range(self.pos[0], 1):
             move = (x, self.pos[1])
@@ -295,6 +303,7 @@ class King(Pieces):
         self.check = False
     
     def current_moveset(self):
+        self.reset_moveset()
         for move in self.move:
             moving = (move[0] + self.pos[0], move[1] + self.pos[1])
             if self.check_inbound(moving):

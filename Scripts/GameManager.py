@@ -1,20 +1,25 @@
 import pygame 
+from .Board import Board
+from .Pieces import Pieces
 
 class GameProcess:
     def __init__(self):
         self.defense_list = []
         self.whites_turn = True
     
-    def move_piece(self, board, object_piece, init_pos, target_pos):
-        object_piece.change_pos(target_pos)
-        board.objects[target_pos] = object_piece
-        board.objects[init_pos] = None
+    def move_piece(self, board: Board, object_piece: Pieces, target_pos):
+        if object_piece.return_pos() != target_pos:
+            temp = object_piece.return_pos()
+            object_piece.change_pos(target_pos)
+            board.objects[target_pos] = object_piece
+            board.objects[target_pos].current_moveset()
+            board.objects[temp] = None
     
-    def clicked(self, grid_rect: dict, m_pos) -> str:
+    def clicked(self, grid_rect: dict[str, pygame.Rect], m_pos) -> str:
         for key, rect in grid_rect.items():
             if rect.collidepoint(m_pos):
                 return key
-        return ""          
+        return ""
 
     def turn_checker(self, turn_has_moved: bool) -> bool:
         if turn_has_moved:
@@ -35,8 +40,8 @@ class GameProcess:
                 #if value.color == "black":
                 #    object_dict[king_pos["white"]].update_check(value.moveset)
         
-    def can_move(self, object, target_pos) -> bool:
-        if target_pos in object.moveset:
+    def can_move(self, piece: Pieces, target_pos) -> bool:
+        if piece and target_pos in piece.moveset:
             return True
         return False
 
