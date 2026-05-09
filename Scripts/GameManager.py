@@ -1,15 +1,14 @@
 import pygame 
 
 class GameProcess:
-    def __init__(self, object_dict: dict):
-        self.object_dict = object_dict
-        self.current_piece = ""
+    def __init__(self):
         self.defense_list = []
         self.whites_turn = True
     
-    def move_piece(self, init_pos, target_pos):
-        self.object_dict[target_pos] = self.object_dict[init_pos]
-        self.object_dict[init_pos] = None
+    def move_piece(self, board, object_piece, init_pos, target_pos):
+        object_piece.change_pos(target_pos)
+        board.objects[target_pos] = object_piece
+        board.objects[init_pos] = None
     
     def clicked(self, grid_rect: dict, m_pos) -> str:
         for key, rect in grid_rect.items():
@@ -23,17 +22,23 @@ class GameProcess:
         
         return self.whites_turn
     
-    def update_moveset(self, king_pos: dict, object_dict: dict):
-        object_dict[king_pos["white"]].current_moveset()
-        object_dict[king_pos["black"]].current_moveset()
+    def update_moveset(self, object_dict: dict):
+        #object_dict[king_pos["white"]].current_moveset()
+        #object_dict[king_pos["black"]].current_moveset()
 
         for key, value in object_dict.items():
-            if value.p_type != "king":
+            #if value.p_type != "king":
+            if value:
                 value.current_moveset()
-                if value.color == "white":
-                    object_dict[king_pos["black"]].update_check(value.moveset)
-                if value.color == "black":
-                    object_dict[king_pos["white"]].update_check(value.moveset)
+                #if value.color == "white":
+                #    object_dict[king_pos["black"]].update_check(value.moveset)
+                #if value.color == "black":
+                #    object_dict[king_pos["white"]].update_check(value.moveset)
+        
+    def can_move(self, object, target_pos) -> bool:
+        if target_pos in object.moveset:
+            return True
+        return False
 
 class BoardGrid:
     def __init__(self, surf_rect,  grid=[8, 8]):
@@ -86,7 +91,8 @@ class Render:
             if values:
                 self.surf.blit(self.asset[values.color][values.p_type], self.rect_dict[key].topleft)
     
-    def moveset(self, img, piece):
+    def moveset(self, img, piece, color: str):
         piece.current_moveset()
-        for move in piece.moveset:
-            self.surf.blit(img, self.rect_dict[move].topleft)
+        if color == piece.color:
+            for move in piece.moveset:
+                self.surf.blit(img, self.rect_dict[move].topleft)

@@ -12,6 +12,9 @@ class Pieces:
         self.has_moved = False
         self.stop = False
 
+    def change_pos(self, pos):
+        self.pos = str_to_tuple_pos(pos)
+        
     def return_type(self):
         return self.p_type
     
@@ -44,6 +47,9 @@ class Pieces:
     
     def check_inbound(self, pos: tuple):
         return pos[0] > 0 and pos[0] < 9 and pos[1] > 0 and pos[1] < 9
+
+    def return_pos(self):
+        return pos_converter(self.pos)
 
 class Pawn(Pieces):
     def __init__(self, pos: str, color: str, board: dict, en_passant_board: dict):

@@ -1,6 +1,6 @@
 import pygame
 
-BASE_IMG_PATH = "Chess-Using-Python/ChessPieces/"
+BASE_IMG_PATH = "ChessPieces/"
 
 def load_image(path, rect=None):
     img = pygame.image.load(BASE_IMG_PATH + path)

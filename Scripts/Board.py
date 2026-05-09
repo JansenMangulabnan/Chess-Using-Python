@@ -58,7 +58,7 @@ class Board:
 
         self.objects["e1"] = King("d1", "white", self.colors)
         self.objects["e8"] = King("d8", "black", self.colors)
-   
+
     def return_colors(self) -> dict:
         return self.colors  
 

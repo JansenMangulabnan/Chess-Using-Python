@@ -45,6 +45,8 @@ class Chess:
 
         self.has_moved = False
         self.pos_clicked = ""
+        self.clicked_piece = None
+        self.color = ""
 
     def run(self):
         while True:
@@ -52,9 +54,12 @@ class Chess:
             m_pos = pygame.mouse.get_pos()
             objects = self.board.return_objects()
 
-            if self.has_moved:
-                self.game.turn_checker(self.has_moved)
-                self.has_moved = False
+            self.game.update_moveset(self.board.objects)
+
+            if self.game.whites_turn:
+                self.color = "white"
+            else: 
+                self.color = "black"
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -66,12 +71,16 @@ class Chess:
             
             self.renderer.board()
             self.renderer.pieces(objects)
+
+            if self.clicked_piece and self.game.can_move(self.clicked_piece, self.pos_clicked):
+                self.game.move_piece(self.board, self.clicked_piece, self.clicked_piece.return_pos(), self.pos_clicked)
+                self.has_moved = True
             
             if self.pos_clicked and objects[self.pos_clicked]:
-                self.renderer.moveset(self.moveset_img, objects[self.pos_clicked])
+                self.clicked_piece = objects[self.pos_clicked]
+                self.renderer.moveset(self.moveset_img, self.clicked_piece, self.color)
 
             pygame.display.update()
             self.clock.tick(60)
     
-
 Chess().run()
