@@ -36,7 +36,7 @@ class Pieces:
         if self.board[pos_converter(pos)]:
             return self.board[pos_converter(pos)] != self.color
         else:
-            return False 
+            return False
     
     def check_area(self, king_pos: list):
         check = []
@@ -53,9 +53,6 @@ class Pieces:
     
     def reset_moveset(self):
         self.moveset = []
-    
-    def current_moveset():
-        pass
 
 class Pawn(Pieces):
     def __init__(self, pos: str, color: str, board: dict, en_passant_board: dict):
