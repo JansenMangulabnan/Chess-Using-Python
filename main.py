@@ -46,7 +46,7 @@ class Chess:
 
         self.pos_clicked = ""
         self.clicked_piece: Pieces = None
-        self.color = ""
+        self.color = "white"
         self.has_moved: bool = False
     
     def input_handler(self):
@@ -72,11 +72,6 @@ class Chess:
             objects = self.board.return_objects()
 
             self.game.update_moveset(self.board.objects)
-
-            if self.game.whites_turn:
-                self.color = "white"
-            else: 
-                self.color = "black"
             
             self.input_handler()
 
@@ -87,6 +82,7 @@ class Chess:
                 self.game.move_piece(self.board, self.clicked_piece, self.pos_clicked)
                 self.clicked_piece = None
                 self.has_moved = True
+                self.color = "black" if self.color == "white" else "white"
             
             if self.pos_clicked and objects[self.pos_clicked]:
                 self.clicked_piece = objects[self.pos_clicked]
