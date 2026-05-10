@@ -2,6 +2,7 @@ import pygame
 from .Board import Board
 from .Pieces import Pieces
 
+
 class GameProcess:
     def __init__(self):
         self.defense_list = []
@@ -45,6 +46,7 @@ class GameProcess:
             return True
         return False
 
+
 class BoardGrid:
     def __init__(self, surf_rect,  grid=[8, 8]):
         board_rect = pygame.Rect(0, 0, 600, 600)
@@ -72,8 +74,9 @@ class BoardGrid:
             
         return rect_dict
 
+
 class Render:
-    def __init__(self, surf, rect_dict: dict, asset):
+    def __init__(self, surf: pygame.Surface, rect_dict: dict[str, pygame.Rect], asset):
         self.surf = surf
         self.asset = asset
         self.rect_dict = rect_dict
@@ -91,12 +94,12 @@ class Render:
                 manager = 0
                 white = not white
 
-    def pieces(self, pieces_dict: dict):
+    def pieces(self, pieces_dict: dict[str, Pieces]):
         for key, values in pieces_dict.items():
             if values:
                 self.surf.blit(self.asset[values.color][values.p_type], self.rect_dict[key].topleft)
     
-    def moveset(self, img, piece, color: str):
+    def moveset(self, img, piece: Pieces, color: str):
         piece.current_moveset()
         if color == piece.color:
             for move in piece.moveset:

@@ -1,4 +1,4 @@
-import pygame 
+import pygame
 import sys
 
 from Scripts.GameManager import GameProcess, BoardGrid, Render
@@ -38,6 +38,7 @@ class Chess:
                 "rook": load_image("w_rook.png", self.board_dict["a1"]),
             }
         }
+
         self.moveset_img = load_image("moveset.png", self.board_dict["a1"])
 
         self.pieces_rect = get_img_rect(self.pieces_img["black"], self.pieces_img["white"])
@@ -46,8 +47,9 @@ class Chess:
 
         self.pos_clicked = ""
         self.clicked_piece: Pieces = None
-        self.color = ""
+        self.current_color = "white"
         self.has_moved: bool = False
+        self.objects: dict[str, Pieces] = self.board.return_objects()
     
     def input_handler(self):
         m_pos = pygame.mouse.get_pos()
@@ -69,30 +71,25 @@ class Chess:
     def run(self):
         while True:
             self.surface.fill((0, 0, 0))
-            objects = self.board.return_objects()
 
             self.game.update_moveset(self.board.objects)
-
-            if self.game.whites_turn:
-                self.color = "white"
-            else: 
-                self.color = "black"
             
             self.input_handler()
 
             self.renderer.board()
-            self.renderer.pieces(objects)
+            self.renderer.pieces(self.objects)
 
             if self.clicked_piece and self.game.can_move(self.clicked_piece, self.pos_clicked):
                 self.game.move_piece(self.board, self.clicked_piece, self.pos_clicked)
                 self.clicked_piece = None
                 self.has_moved = True
+                self.current_color = "black" if self.current_color == "white" else "white"
             
-            if self.pos_clicked and objects[self.pos_clicked]:
-                self.clicked_piece = objects[self.pos_clicked]
+            if self.pos_clicked and self.objects[self.pos_clicked] and self.objects[self.pos_clicked].color == self.current_color:
+                self.clicked_piece = self.objects[self.pos_clicked]
             
             if self.clicked_piece:
-                self.renderer.moveset(self.moveset_img, self.clicked_piece, self.color)
+                self.renderer.moveset(self.moveset_img, self.clicked_piece, self.current_color)
 
             pygame.display.update()
             self.clock.tick(60)
