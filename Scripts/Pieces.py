@@ -8,8 +8,6 @@ class Pieces:
         self.p_type = p_type
 
         self.moveset = []
-        self.can_en_passant = False
-        self.has_moved = False
         self.stop = False
 
     def change_pos(self, pos):
@@ -60,37 +58,41 @@ class Pawn(Pieces):
 
         self.en_passant_board = en_passant_board
         self.move = []
-        self.letter = "abcdefgh"
+        self.can_en_passant = False
+        self.has_moved = False
 
         if color == "white":
             self.move = [(0, 2), (0, 1), (-1, 1), (1, 1)]
         if color == "black":
             self.move = [(0, -2), (0, -1), (-1, -1), (1, -1)]
 
+    def update_has_moved():
+        self.has_moved = True
+
     def current_moveset(self) -> dict:
         self.reset_moveset()
-        dict_move = []
+        move_list = []
 
         for i in range(0, 4):
-            dict_move.append((self.move[i][0] + self.pos[0], self.move[i][1] + self.pos[1]))
+            move_list.append((self.move[i][0] + self.pos[0], self.move[i][1] + self.pos[1]))
 
-        current_move = dict_move[0]
+        current_move = move_list[0]
         if not self.has_moved and not self.pos_occupied(current_move):
             self.append_move(current_move)
             self.en_passant_board[current_move] = True
 
-        current_move = dict_move[1]
+        current_move = move_list[1]
         if not self.pos_occupied(current_move):
             self.append_move(current_move)
 
         if self.pos[0] != 1:
-            current_move = dict_move[2]
+            current_move = move_list[2]
             can_en_passant = self.en_passant_board[self.color] == current_move[0]
             if self.pos_is_enemy(current_move) or can_en_passant:
                 self.append_move(current_move)
 
         if self.pos[0] != 8:
-            current_move = dict_move[3]
+            current_move = move_list[3]
             can_en_passant = self.en_passant_board[self.color] == current_move[0]
             if self.pos_is_enemy(current_move) or can_en_passant:
                 self.append_move(current_move)
