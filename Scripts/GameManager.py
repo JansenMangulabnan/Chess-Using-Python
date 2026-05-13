@@ -27,7 +27,7 @@ class GameProcess:
         
         return self.whites_turn
     
-    def update_moveset(self, object_dict: dict):
+    def update_moveset(self, object_dict: dict[str, Pieces]):
         #object_dict[king_pos["white"]].current_moveset()
         #object_dict[king_pos["black"]].current_moveset()
 
