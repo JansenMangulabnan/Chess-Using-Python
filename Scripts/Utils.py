@@ -27,20 +27,13 @@ def pos_converter(pos: tuple) -> str:
 
 def get_range(start, finish) -> list:
     range_list = []
-    if start == finish:
-        return []
-    if start < finish:
-        while True:
-            start += 1
-            range_list.append(start)
-            if start >= finish:
-                return range_list
-    if start > finish:
-        while True:
-            start -= 1
-            range_list.append(start)
-            if start <= finish:
-                return range_list
+    while start < finish:
+        start += 1
+        range_list.append(start)
+    while start > finish:
+        start -= 1
+        range_list.append(start)
+    return range_list
 
 def str_to_tuple_pos(pos) -> tuple:
     letter = "-abcdefgh"
