@@ -320,7 +320,6 @@ class King(Pieces):
                 self.check = True
 
     def is_checkmate(self, defense_list):
-        checkmate = False
         if self.check and not self.moveset and not defense_list:
-            checkmate = True
-        return checkmate
+            return True
+        return False
