@@ -25,7 +25,7 @@ def pos_converter(pos: tuple) -> str:
     letter = "labcdefgh"
     return letter[pos[0]] + str(pos[1])
 
-def get_range(start, finish):
+def get_range(start, finish) -> list:
     range_list = []
     if start == finish:
         return []
