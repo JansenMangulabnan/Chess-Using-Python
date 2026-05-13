@@ -4,10 +4,13 @@ from .Pieces import Pieces, Pawn
 
 class GameProcess:
     def __init__(self):
-        self.defense_list = []
+        self.king_moveset = {
+            "white": [],
+            "black": []
+        }
         self.whites_turn = True
     
-    def move_piece(self, board: Board, object_piece: Pieces, target_pos):
+    def move_piece(self, board: Board, object_piece: Pieces, target_pos: str):
         if object_piece.return_pos() != target_pos:
             if (type(object_piece) is Pawn):
                 object_piece.update_has_moved()
@@ -16,32 +19,22 @@ class GameProcess:
             board.objects[target_pos] = object_piece
             board.objects[temp] = None
     
-    def clicked(self, grid_rect: dict[str, pygame.Rect], m_pos) -> str:
+    def clicked(self, grid_rect: dict[str, pygame.Rect], m_pos: tuple[int, int]) -> str:
         for key, rect in grid_rect.items():
             if rect.collidepoint(m_pos):
                 return key
         return ""
-
-    def turn_checker(self, turn_has_moved: bool) -> bool:
-        if turn_has_moved:
-            self.whites_turn = not self.whites_turn
-        
-        return self.whites_turn
     
     def update_moveset(self, object_dict: dict[str, Pieces]):
-        #object_dict[king_pos["white"]].current_moveset()
-        #object_dict[king_pos["black"]].current_moveset()
-
         for value in object_dict.values():
-            #if value.p_type != "king":
             if value:
                 value.update_board(object_dict)
                 value.current_moveset()
-        
-                #if value.color == "white":
-                #    object_dict[king_pos["black"]].update_check(value.moveset)
-                #if value.color == "black":
-                #    object_dict[king_pos["white"]].update_check(value.moveset)              
+
+                if value.p_type == "king":
+                    self.king_moveset[value.color] = value.moveset
+
+
         
     def can_move(self, piece: Pieces, target_pos) -> bool:
         if piece and target_pos in piece.moveset:
@@ -74,6 +67,7 @@ class BoardGrid:
             pos[0] += self.grid_size[0]
             
         return rect_dict
+
 
 class Render:
     def __init__(self, surf, rect_dict: dict, asset):

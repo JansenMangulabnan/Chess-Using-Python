@@ -18,7 +18,6 @@ class Chess:
         self.board_dict = BoardGrid(self.surf_rect).create_rect()
 
         self.object_board = Board()
-        self.color_board = self.object_board.colors
         self.object_board.init()
 
         self.pieces_img = {

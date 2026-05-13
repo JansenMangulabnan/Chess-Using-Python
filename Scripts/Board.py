@@ -11,8 +11,6 @@ def create_board():
 class Board:
     def __init__(self):
         self.letter = "abcdefgh"
-        self.colors = create_board()
-
         self.objects = create_board()
 
         self.can_en_pessant = {
@@ -20,18 +18,7 @@ class Board:
             "white": None,
         }
 
-        self.king_pos = {
-            "white": "e1",
-            "black": "e8",
-        }
-    
-    def init(self):
-        for i in range(0, 8):
-            self.colors[self.letter[i] + "1"] = "white"
-            self.colors[self.letter[i] + "2"] = "white"
-            self.colors[self.letter[i] + "7"] = "black"
-            self.colors[self.letter[i] + "8"] = "black"
-        
+    def init(self):     
         for i in range(0, 8):
             pos = self.letter[i] + "2"
             self.objects[pos] = Pawn(pos, "white", self.can_en_pessant)
