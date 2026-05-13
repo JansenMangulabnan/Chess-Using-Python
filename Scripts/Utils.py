@@ -8,7 +8,7 @@ def load_image(path, rect=None):
         img = pygame.transform.scale(img, (rect.width, rect.height))
     return img
 
-def get_img_rect(img_b, img_w):
+def get_img_rect(img_b: dict, img_w: dict) -> dict[str, dict[str, pygame.Rect]]:
     img_dict = {
         "black": {},
         "white": {}
