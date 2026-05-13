@@ -1,10 +1,10 @@
 from .Utils import pos_converter, get_range, str_to_tuple_pos
 
 class Pieces:
-    def __init__(self, pos: str, color: str, board: dict, p_type: str):
+    def __init__(self, pos: str, color: str, p_type: str):
         self.pos = str_to_tuple_pos(pos)
         self.color = color
-        self.board = board
+        self.board: dict[str, __class__] = None
         self.p_type = p_type
 
         self.moveset = []
@@ -32,7 +32,7 @@ class Pieces:
 
     def pos_is_enemy(self, pos):
         if self.board[pos_converter(pos)]:
-            return self.board[pos_converter(pos)] != self.color
+            return self.board[pos_converter(pos)].color != self.color
         else:
             return False
     
@@ -49,12 +49,18 @@ class Pieces:
     def return_pos(self):
         return pos_converter(self.pos)
     
+    def update_board(self, _object: dict) -> None:
+        self.board = _object
+    
     def reset_moveset(self):
         self.moveset = []
+    
+    def current_moveset() -> dict:
+        pass
 
 class Pawn(Pieces):
-    def __init__(self, pos: str, color: str, board: dict, en_passant_board: dict):
-        super().__init__(pos, color, board, "pawn")
+    def __init__(self, pos: str, color: str, en_passant_board: dict):
+        super().__init__(pos, color, "pawn")
 
         self.en_passant_board = en_passant_board
         self.move = []
@@ -66,7 +72,7 @@ class Pawn(Pieces):
         if color == "black":
             self.move = [(0, -2), (0, -1), (-1, -1), (1, -1)]
 
-    def update_has_moved():
+    def update_has_moved(self):
         self.has_moved = True
 
     def current_moveset(self) -> dict:
@@ -100,8 +106,8 @@ class Pawn(Pieces):
         return self.moveset
 
 class Rook(Pieces):
-    def __init__(self, pos: str, color: str, board: dict):
-        super().__init__(pos, color, board, "rook")
+    def __init__(self, pos: str, color: str):
+        super().__init__(pos, color, "rook")
     
     def current_moveset(self):
         self.reset_moveset()
@@ -140,8 +146,8 @@ class Rook(Pieces):
         return self.moveset
 
 class Bishop(Pieces):
-    def __init__(self, pos: str, color: str, board: dict):
-        super().__init__(pos, color, board, "bishop")
+    def __init__(self, pos: str, color: str):
+        super().__init__(pos, color, "bishop")
 
     def current_moveset(self):
         self.reset_moveset()
@@ -196,8 +202,8 @@ class Bishop(Pieces):
         return self.moveset
 
 class Knight(Pieces):
-    def __init__(self, pos: str, color: str, board: dict):
-        super().__init__(pos, color, board, "knight")
+    def __init__(self, pos: str, color: str):
+        super().__init__(pos, color, "knight")
         self.move = [(-1, 2), (-1, -2), (1, 2), (1, -2),
                      (2, 1), (2, -1), (-2, 1), (-2, -1),]
     
@@ -210,8 +216,8 @@ class Knight(Pieces):
                     self.append_move(moving)
 
 class Quenn(Pieces):
-    def __init__(self, pos: str, color: str, board: dict):
-        super().__init__(pos, color, board, "quenn")
+    def __init__(self, pos: str, color: str):
+        super().__init__(pos, color, "quenn")
     
     def current_moveset(self):
         self.reset_moveset()
@@ -298,8 +304,8 @@ class Quenn(Pieces):
         return self.moveset
 
 class King(Pieces): 
-    def __init__(self, pos: str, color: str, board: dict):
-        super().__init__(pos, color, board, "king")
+    def __init__(self, pos: str, color: str):
+        super().__init__(pos, color, "king")
         self.move = [(1, 1), (1, -1), (-1, 1), (-1, 1),
                      (1, 0), (-1, 0), (0, 1), (0, -1),]
         self.check = False

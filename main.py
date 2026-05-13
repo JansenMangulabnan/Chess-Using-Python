@@ -17,8 +17,9 @@ class Chess:
         self.surf_rect = self.surface.get_rect()
         self.board_dict = BoardGrid(self.surf_rect).create_rect()
 
-        self.board = Board()
-        self.board.init()
+        self.object_board = Board()
+        self.color_board = self.object_board.colors
+        self.object_board.init()
 
         self.pieces_img = {
             "black": {
@@ -69,9 +70,9 @@ class Chess:
     def run(self):
         while True:
             self.surface.fill((0, 0, 0))
-            objects = self.board.return_objects()
+            objects = self.object_board.objects
 
-            self.game.update_moveset(self.board.objects)
+            self.game.update_moveset(objects)
             
             self.input_handler()
 
@@ -79,12 +80,12 @@ class Chess:
             self.renderer.pieces(objects)
 
             if self.clicked_piece and self.game.can_move(self.clicked_piece, self.pos_clicked):
-                self.game.move_piece(self.board, self.clicked_piece, self.pos_clicked)
+                self.game.move_piece(self.object_board, self.clicked_piece, self.pos_clicked)
                 self.clicked_piece = None
                 self.has_moved = True
                 self.color = "black" if self.color == "white" else "white"
             
-            if self.pos_clicked and objects[self.pos_clicked]:
+            if self.pos_clicked and objects[self.pos_clicked] and objects[self.pos_clicked].color == self.color:
                 self.clicked_piece = objects[self.pos_clicked]
             
             if self.clicked_piece:

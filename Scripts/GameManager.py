@@ -1,6 +1,6 @@
 import pygame 
 from .Board import Board
-from .Pieces import Pieces
+from .Pieces import Pieces, Pawn
 
 class GameProcess:
     def __init__(self):
@@ -9,10 +9,11 @@ class GameProcess:
     
     def move_piece(self, board: Board, object_piece: Pieces, target_pos):
         if object_piece.return_pos() != target_pos:
+            if (type(object_piece) is Pawn):
+                object_piece.update_has_moved()
             temp = object_piece.return_pos()
             object_piece.change_pos(target_pos)
             board.objects[target_pos] = object_piece
-            board.objects[target_pos].current_moveset()
             board.objects[temp] = None
     
     def clicked(self, grid_rect: dict[str, pygame.Rect], m_pos) -> str:
@@ -31,14 +32,16 @@ class GameProcess:
         #object_dict[king_pos["white"]].current_moveset()
         #object_dict[king_pos["black"]].current_moveset()
 
-        for key, value in object_dict.items():
+        for value in object_dict.values():
             #if value.p_type != "king":
             if value:
+                value.update_board(object_dict)
                 value.current_moveset()
+        
                 #if value.color == "white":
                 #    object_dict[king_pos["black"]].update_check(value.moveset)
                 #if value.color == "black":
-                #    object_dict[king_pos["white"]].update_check(value.moveset)
+                #    object_dict[king_pos["white"]].update_check(value.moveset)              
         
     def can_move(self, piece: Pieces, target_pos) -> bool:
         if piece and target_pos in piece.moveset:
