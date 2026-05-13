@@ -42,7 +42,7 @@ def get_range(start, finish):
             if start <= finish:
                 return range_list
 
-def str_to_tuple_pos(pos):
+def str_to_tuple_pos(pos) -> tuple:
     letter = "-abcdefgh"
     output = (letter.index(pos[0]), int(pos[1]))
     return output
