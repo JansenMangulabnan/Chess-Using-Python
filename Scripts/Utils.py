@@ -40,3 +40,7 @@ def str_to_tuple_pos(pos) -> tuple:
     output = (letter.index(pos[0]), int(pos[1]))
     return output
     
+def reverse_color(color: str):
+    if color == "white":
+        return "black"
+    return "white"

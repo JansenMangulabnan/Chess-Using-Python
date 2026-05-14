@@ -6,6 +6,7 @@ from Scripts.Board import Board
 from Scripts.Utils import load_image, get_img_rect
 from Scripts.Pieces import Pieces
 
+
 class Chess:
     def __init__(self):
         pygame.init()
@@ -48,6 +49,8 @@ class Chess:
         self.clicked_piece: Pieces = None
         self.color = "white"
         self.has_moved: bool = False
+
+        self.game.update_moveset(self.object_board.objects)
     
     def input_handler(self):
         m_pos = pygame.mouse.get_pos()
@@ -64,14 +67,11 @@ class Chess:
             if event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.has_moved = False
-                
 
     def run(self):
         while True:
             self.surface.fill((0, 0, 0))
             objects = self.object_board.objects
-
-            self.game.update_moveset(objects)
             
             self.input_handler()
 
@@ -83,6 +83,7 @@ class Chess:
                 self.clicked_piece = None
                 self.has_moved = True
                 self.color = "black" if self.color == "white" else "white"
+                self.game.update_moveset(objects)
             
             if self.pos_clicked and objects[self.pos_clicked] and objects[self.pos_clicked].color == self.color:
                 self.clicked_piece = objects[self.pos_clicked]

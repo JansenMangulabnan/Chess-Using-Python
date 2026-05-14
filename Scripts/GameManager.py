@@ -1,6 +1,7 @@
 import pygame 
 from .Board import Board
-from .Pieces import Pieces, Pawn
+from .Pieces import Pieces, Pawn, King
+from Utils import reverse_color, pos_converter
 
 class GameProcess:
     def __init__(self):
@@ -26,6 +27,11 @@ class GameProcess:
         return ""
     
     def update_moveset(self, object_dict: dict[str, Pieces]):
+        king_object_pos = {
+            "black": None,
+            "white": None
+        }
+
         for value in object_dict.values():
             if value:
                 value.update_board(object_dict)
@@ -33,14 +39,16 @@ class GameProcess:
 
                 if value.p_type == "king":
                     self.king_moveset[value.color] = value.moveset
-
-
-        
+                    king_object_pos[value.color] = value.return_pos()
+                
+                for move in value.moveset:
+                    object_dict[king_object_pos[reverse_color(value.color)]].update_check(move)
+ 
     def can_move(self, piece: Pieces, target_pos) -> bool:
         if piece and target_pos in piece.moveset:
             return True
-        return False
-
+        return False  
+ 
 class BoardGrid:
     def __init__(self, surf_rect,  grid=[8, 8]):
         board_rect = pygame.Rect(0, 0, 600, 600)

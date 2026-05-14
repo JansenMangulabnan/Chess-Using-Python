@@ -7,7 +7,7 @@ class Pieces:
         self.board: dict[str, __class__] = None
         self.p_type = p_type
 
-        self.moveset = []
+        self.moveset: list[tuple[int, int]]= []
         self.stop = False
 
     def change_pos(self, pos):
@@ -55,8 +55,10 @@ class Pieces:
     def reset_moveset(self):
         self.moveset = []
     
-    def current_moveset() -> dict:
+    def current_moveset(self) -> dict:
         pass
+    
+
 
 class Pawn(Pieces):
     def __init__(self, pos: str, color: str, en_passant_board: dict):
@@ -318,7 +320,7 @@ class King(Pieces):
                 if self.calculation(moving):
                     self.append_move(moving)
     
-    def update_check(self, check):
+    def update_check(self, check: list[tuple[int, int]]):
         for move in self.moveset:
             if move in check:
                 self.moveset.remove(move)
